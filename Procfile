@@ -1,1 +1,1 @@
-â€œweb: bundle exec middleman server -p €
+web: bundle exec middleman server -p 

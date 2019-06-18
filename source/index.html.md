@@ -435,7 +435,7 @@ will, however, look something like below.
 > EXAMPLE REQUEST
 
 ```shell
-curl https://app.capsured.co.za/api/item/add \
+curl https://app.capsured.co.za/api/quote \
   --request POST \
   -H "Content-Type: multipart/form-data" \
   -H "Authorization: Basic device_id:access_token" \
@@ -552,7 +552,7 @@ This request requires the device authentication in the header.
 > EXAMPLE REQUEST
 
 ```shell
-curl https://app.capsured.co.za/api/item/add \
+curl https://app.capsured.co.za/api/quote \
   --request POST \
   -H "Content-Type: multipart/form-data" \
   -H "Authorization: Basic device_id:access_token" \
@@ -650,3 +650,1084 @@ I am not going to duplicate the ROOT documentation. Visit their docs to see what
 <aside class="warning">
 This request requires the device authentication in the header.
 </aside>
+
+## Activate an Item
+
+Activate an item for the authenticated user. This endpoint will activate the item on the policy of
+the user with the quote he/she has chosen. This endpoint works in two ways:
+
+1. When the user has no items activated, the user has no existing policy. The quote that the user got will contain a `package_id`. Thus, the `quote_package_id` will need
+to be specified in the body of this request.
+2. When the user has items activated and a policy already exists, the `quote_request` in the body needs
+to be specified with the information returned from the `api/quote` request. 
+
+The `card_id` can be specified on the request. This will only be added on requests following the first activation, since the card
+will only be linked to the user after the first item has been activated.
+
+### HTTP Request
+
+`POST https://app.capsured.co.za/api/item/activate`
+
+> EXAMPLE REQUEST
+
+```shell
+curl https://app.capsured.co.za/api/item/activate \
+  --request POST \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Basic device_id:access_token" \
+  -F 'display_0=@/path/to/file/example_file_1.jpg' \
+  -F 'display_1=@/path/to/file/example_file_2.jpg' \
+  -F 'display_2=@/path/to/file/example_file_3.jpg' \
+  -F 'serial_0=@/path/to/file/example_file_4.jpg' \
+  -b '{
+    "id": 1,
+    "cover_type": "on_demand",
+    "quote_request": {
+        "covered_items": [
+            {
+                "product_type": "camera",
+                "cover_type": "on_demand",
+                "model": "camera_nikon_9",
+                "serial_number": "1234567890",
+                "purchase_date": "2018-01-01",
+                "retail_value": 260000,
+                "benefit_type": "standard",
+                "underwater_usage": true,
+                "perils": {
+                    "accidental_damage": true,
+                    "theft": true
+                },
+                "excess": {
+                    "type": "fixed",
+                    "value": 50000
+                },
+                "usage": "personal",
+                "outside_home": true,
+                "overnight_storage": "locked_safe",
+                "daytime_storage": "locked_safe",
+                "protective_gear": null,
+                "extreme_sports": null,
+                "existing_damage": false,
+                "cover_periods": [
+                  {
+                    "start_date": "2019-07-05",
+                    "end_date": "2019-07-20",
+                  }
+                ]
+            }
+        ]	
+    }
+   }'
+```
+
+#### BODY PARAMETERS
+
+Parameter | Description      
+--------- |  -----------
+id |  *integer*. The item's id.
+cover_type      |  *string*. The cover type of the quote - `on_demand` or `monthly`.
+quote_request <sub>optional</sub>   |  *json*. The quote that was given as a response from the `/api/quote` request.
+quote_package_id <sub>optional</sub>   |  *string*. The quote package id that was selected for the firt activated item.
+card_id <sub>optional</sub>   |  *string*. The card id of the user. This is only needed if a card is already active for the user.
+serial_0 |  *file*. The serial number image of the item.
+display_0 |  *file*. An image of the item
+display_1 |  *file*. An image of the item
+display_2 |  *file*. An image of the item
+> EXAMPLE RESPONSE
+
+```
+ // TODO
+```
+<aside class="warning">
+This request requires the device authentication in the header.
+</aside>
+
+## Deactivate an Item
+
+Deactivate an item for the authenticated user. If an item is currently on an active policy, the
+item will be removed from the policy and deactivated.
+
+### HTTP Request
+
+`PUT https://app.capsured.co.za/api/item/deactivate`
+
+> EXAMPLE REQUEST
+
+```shell
+curl https://app.capsured.co.za/api/item/deactivate \
+  --request PUT \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Basic device_id:access_token" \
+  -b '{
+    "id": 1,
+    "reason": "Because I can beep beep like a sheep."
+  }'
+```
+
+#### BODY PARAMETERS
+
+Parameter | Description      
+--------- |  -----------
+id |  *integer*. The item's id.
+reason |  *string*. The reason for the cancellation.
+
+> EXAMPLE RESPONSE
+
+```
+ // TODO
+```
+<aside class="warning">
+This request requires the device authentication in the header.
+</aside>
+
+## Claim an Item
+
+Claim an item for the authenticated user. This will issue a claim for the item selected and
+send an email to the user and capsured to inform them a claim has been submitted. The process
+after that is manual and this application has nothing to do with the claiming process further.
+
+### HTTP Request
+
+`PUT https://app.capsured.co.za/api/item/claim`
+
+> EXAMPLE REQUEST
+
+```shell
+curl https://app.capsured.co.za/api/item/claim \
+  --request PUT \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Basic device_id:access_token" \
+  -b '{
+    "id": 1,
+    "reason": "theft",
+    "pssa_member": true,
+    "incident_date": "2019-06-01"
+  }'
+```
+
+#### BODY PARAMETERS
+
+Parameter | Description      
+--------- |  -----------
+id |  *integer*. The item's id.
+reason |  *string*. The reason for the claim.
+pssa_member |  *boolean*. If the user is a `pssa member` or not.
+incident_date |  *string*. The date of the incident.
+
+> EXAMPLE RESPONSE
+
+```
+ // TODO
+```
+<aside class="warning">
+This request requires the device authentication in the header.
+</aside>
+
+## Get Items
+
+Get all the items of the authenticated user. If an item has a policy active, the `policy` tag in
+the response wil contain all the information about the specific policy.
+
+### HTTP Request
+
+`GET https://app.capsured.co.za/api/items`
+
+> EXAMPLE REQUEST
+
+```shell
+curl https://app.capsured.co.za/api/items \
+  --request GET \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Basic device_id:access_token"
+```
+
+> EXAMPLE RESPONSE
+
+```json
+ {
+     "success": true,
+     "errorCode": 0,
+     "msg": "",
+     "info": "",
+     "data": {
+         "items": [
+             {
+                 "id": 1,
+                 "name": "Canon EOS M6 Compact Mirrorless Camera (Body Only, Black)",
+                 "key": "camera_canon_10",
+                 "product_type": "camera",
+                 "make": "Canon",
+                 "model": "Canon EOS M6 Compact Mirrorless Camera (Body Only, Black)",
+                 "serial_number": "Hdjsjjdnnd",
+                 "covered_item_id": null,
+                 "reason_cancelled": "Test",
+                 "status": 1,
+                 "cover_type": 2,
+                 "created_at": "2019-04-12 08:20:59",
+                 "updated_at": "2019-04-12 08:23:57",
+                 "deleted_at": null,
+                 "purchase_date": "2019-04-10 00:00:00",
+                 "policy": null,
+                 "covered_items": null,
+                 "files": [
+                     {
+                         "id": 1,
+                         "path": "production/users/1/items/5/U4B1mS4WDkR27EFbBIuj1dMe7C0VvFW2zdNpg6Ja.jpeg",
+                         "file_name": "profile_img_0_1555057257778_201",
+                         "type": "profile"
+                     },
+                     {
+                         "id": 2,
+                         "path": "production/users/1/items/5/l8t5d6MaRumJKb390ws3JdS5CxrZ66G6amIxj7fE.jpeg",
+                         "file_name": "display_0_img_1555057327385_633",
+                         "type": "display"
+                     },
+                     {
+                         "id": 3,
+                         "path": "production/users/1/items/5/C4upO0XTgFa4g5YI075fGv43FYuvGD5UAG1rlIPN.jpeg",
+                         "file_name": "display_1_img_1555057327385_215",
+                         "type": "display"
+                     },
+                     {
+                         "id": 4,
+                         "path": "production/users/1/items/5/CdFfhOfMU7bkGfuqicpEs9Jbuju73jcdCT0kQ9VG.jpeg",
+                         "file_name": "display_2_img_1555057327385_169",
+                         "type": "display"
+                     },
+                     {
+                         "id": 5,
+                         "path": "production/users/1/items/5/WeugtqkUwUL1TyJgbcoBqGHjRewIr51I1oEfk0Zd.jpeg",
+                         "file_name": "serial_1_img__1555057327385_759",
+                         "type": "serial"
+                     }
+                 ]
+             }
+         ]
+     }
+ }
+```
+<aside class="warning">
+This request requires the device authentication in the header.
+</aside>
+
+## Remove an Item
+
+Remove an item from the authenticated user. An item can only be delete if it is not 
+currently on an active policy.
+
+### HTTP Request
+
+`DELETE https://app.capsured.co.za/api/items/<id>/delete`
+
+> EXAMPLE REQUEST
+
+```shell
+curl https://app.capsured.co.za/api/item/<id>/delete \
+  --request DELETE \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Basic device_id:access_token"
+```
+
+#### URL PARAMETERS
+
+Parameter | Description      
+--------- |  -----------
+id |  *integer*. The item's id.
+
+> EXAMPLE RESPONSE
+
+```json
+{
+    "success": true,
+    "errorCode": 0,
+    "msg": "",
+    "info": "",
+    "data": {
+        "item": {
+            "id": 1,
+            "name": "Canon EOS 4000D DSLR Camera (Body Only)",
+            "key": "camera_canon_1",
+            "product_type": "camera",
+            "make": "Canon",
+            "model": "Canon EOS 4000D DSLR Camera (Body Only)",
+            "serial_number": "Test",
+            "covered_item_id": null,
+            "reason_cancelled": "I don't want to be billed",
+            "status": 1,
+            "cover_type": 2,
+            "created_at": "2019-04-11 21:18:53",
+            "updated_at": "2019-06-18 13:13:28",
+            "deleted_at": {
+                "date": "2019-06-18 13:13:28.413784",
+                "timezone_type": 3,
+                "timezone": "UTC"
+            },
+            "payment_successful": 0,
+            "purchase_date": "2019-04-02 00:00:00",
+            "files": [
+                {
+                    "id": 1,
+                    "path": "production/users/1/items/3/GCWzKsAskboqcX8XTo0ttJzPCf5EgXpOvF4MKLiv.jpeg",
+                    "file_name": "profile_img_0_1555017531540_186",
+                    "type": "profile"
+                },
+                {
+                    "id": 2,
+                    "path": "production/users/1/items/3/311KysSrANlP5FnUuBJ55pmjWpo0N2bn0Vksmv3w.jpeg",
+                    "file_name": "display_0_img_1555056918116_750",
+                    "type": "display"
+                },
+                {
+                    "id": 3,
+                    "path": "production/users/1/items/3/vC9RMPGPJw8XIyBpZYXJCwnycMbLXM6OrFx1wYh8.jpeg",
+                    "file_name": "display_1_img_1555056918116_168",
+                    "type": "display"
+                },
+                {
+                    "id": 4,
+                    "path": "production/users/1/items/3/TnLnqzzWnsp5V2IZdJuxRySgVtgQYN9wwi9ddrpo.jpeg",
+                    "file_name": "display_2_img_1555056918116_672",
+                    "type": "display"
+                },
+                {
+                    "id": 5,
+                    "path": "production/users/1/items/3/NoP3s85nDjjAMGDpzig0iHiEPNQr7HFxu40fqZeM.jpeg",
+                    "file_name": "serial_1_img__1555056918116_159",
+                    "type": "serial"
+                }
+            ]
+        }
+    }
+}
+```
+<aside class="warning">
+This request requires the device authentication in the header.
+</aside>
+
+# Payments
+
+## Get Card Page
+
+To add a card for the user, the card page needs to be loaded from ROOT. The following endpoint
+loads this view.
+
+For testing purposes, you can use the following card details:
+
+`4242 4242 4242 4242` (does not ask 3D secure).<br>
+`4111 1111 1111 1111` (asks 3D secure, then you can simulate a failed payment as well).
+
+The rest of the information for the card details can be anything you want, but still in a valid format.
+
+<aside class="warning">
+Once the card was successfully added, the first item will be activated on the policy. A card is then linked
+to the user. Any following activation of items won't need to add a new card, but simply specify the current
+card's id in the <code>/api/item/activate</code> request. Thus, adding a card only happens once.
+</aside>
+
+
+### HTTP Request
+
+`GET https://app.capsured.co.za/api/card/<device_id>/<item_id>`
+
+> EXAMPLE REQUEST
+
+```shell
+curl https://app.capsured.co.za/api/card/05B805D4-1454-4AE3-9F94-C290AB708137/1 \
+  --request GET \
+  -H "Authorization: Basic device_id:access_token"
+```
+
+#### URL PARAMETERS
+
+Parameter | Description      
+--------- |  -----------
+device_id |  *string*. The device id of the user.
+item_id   | *integer*. The item's id.
+
+> EXAMPLE RESPONSE
+
+```
+    // This should be opened in the browser 
+    // and will load a view where a card can be added
+```
+
+## Get Completed Payment Page
+
+One a payment has been completed from root, they will redirect to a pre-specified link that we can provide.
+This is the link that root will redirect to after a payment has failed or succeeded.
+
+### HTTP Request
+
+`GET https://app.capsured.co.za/api/payment/completed/<id>?successful=<successful>`
+
+> EXAMPLE REQUEST
+
+```shell
+curl https://app.capsured.co.za/api/payment/completed/1?successful=true \
+  --request GET \
+  -H "Authorization: Basic device_id:access_token"
+```
+
+#### URL PARAMETERS
+
+Parameter | Description      
+--------- |  -----------
+id |  *string*. The item's policy encrypted id (for security purposes).
+successful   | *boolean*. If the payment was successful or not - `true` or `false`.
+
+> EXAMPLE RESPONSE
+
+```
+    // This should be opened in the browser 
+    // and will load a view where a payment was successful or not.
+    // Currently a button is displayed to redirect back to the app.
+```
+
+# ROOT
+
+## Get Devices
+
+Gets the devices information straight from the root API.
+
+### HTTP Request
+
+`GET https://app.capsured.co.za/api/devices`
+
+> EXAMPLE REQUEST
+
+```shell
+curl https://app.capsured.co.za/api/devices \
+  --request GET \
+  -H "Authorization: Basic device_id:access_token"
+```
+
+> EXAMPLE RESPONSE
+
+```json
+{
+    "success": true,
+    "errorCode": 0,
+    "msg": "",
+    "info": "",
+    "data": {
+        "devices": [
+            {
+                "key": "camera_canon_0",
+                "id": "0",
+                "product_type": "camera",
+                "make": "Canon",
+                "model": "Other",
+                "price": "",
+                "type": ""
+            },
+            {
+                "key": "camera_canon_1",
+                "id": "1",
+                "product_type": "camera",
+                "make": "Canon",
+                "model": "Canon EOS 4000D DSLR Camera (Body Only)",
+                "price": "3 275",
+                "type": "DSLR Cameras"
+            },
+            {
+                "key": "camera_canon_10",
+                "id": "10",
+                "product_type": "camera",
+                "make": "Canon",
+                "model": "Canon EOS M6 Compact Mirrorless Camera (Body Only, Black)",
+                "price": "7 895",
+                "type": "Mirrorless Cameras"
+            }
+            
+            // ...
+        ]
+    }
+}
+            
+```
+
+<aside class="warning">
+This request requires the device authentication in the header.
+</aside>
+
+## Get Makes
+
+Gets the makes information straight from the root API.
+
+### HTTP Request
+
+`GET https://app.capsured.co.za/api/makes`
+
+> EXAMPLE REQUEST
+
+```shell
+curl https://app.capsured.co.za/api/makes \
+  --request GET \
+  -H "Authorization: Basic device_id:access_token"
+```
+
+> EXAMPLE RESPONSE
+
+```json
+{
+    "success": true,
+    "errorCode": 0,
+    "msg": "",
+    "info": "",
+    "data": {
+        "makes": [
+            {
+                "key": "canon",
+                "label": "Canon"
+            },
+            {
+                "key": "fujifilm",
+                "label": "Fujifilm"
+            },
+            {
+                "key": "irix",
+                "label": "Irix"
+            },
+            {
+                "key": "kenko",
+                "label": "Kenko"
+            },
+            {
+                "key": "leica",
+                "label": "Leica"
+            },
+            {
+                "key": "nikon",
+                "label": "Nikon"
+            },
+            {
+                "key": "olympus",
+                "label": "Olympus"
+            },
+            {
+                "key": "panasonic",
+                "label": "Panasonic"
+            },
+            {
+                "key": "sigma",
+                "label": "Sigma"
+            },
+            {
+                "key": "sony",
+                "label": "Sony"
+            },
+            {
+                "key": "tamron",
+                "label": "Tamron"
+            },
+            {
+                "key": "tokina",
+                "label": "Tokina"
+            },
+            {
+                "key": "zeiss",
+                "label": "ZEISS"
+            }
+        ]
+    }
+}
+            
+```
+
+<aside class="warning">
+This request requires the device authentication in the header.
+</aside>
+
+## Get Meta Data
+
+Gets the meta data information straight from the root API.
+
+### HTTP Request
+
+`GET https://app.capsured.co.za/api/meta`
+
+> EXAMPLE REQUEST
+
+```shell
+curl https://app.capsured.co.za/api/meta \
+  --request GET \
+  -H "Authorization: Basic device_id:access_token"
+```
+
+> EXAMPLE RESPONSE
+
+```json
+{
+    "success": true,
+    "errorCode": 0,
+    "msg": "",
+    "info": "",
+    "data": {
+        "meta_data": {
+            "product_types": [
+                {
+                    "key": "camera",
+                    "label": "Camera"
+                },
+                {
+                    "key": "camera_lens",
+                    "label": "Camera lens"
+                }
+            ],
+            "usage": [
+                {
+                    "key": "business",
+                    "label": "Business"
+                },
+                {
+                    "key": "business_and_personal",
+                    "label": "Business and Personal"
+                },
+                {
+                    "key": "personal",
+                    "label": "Personal"
+                },
+                {
+                    "key": "personal_gym_and_fitness",
+                    "label": "Personal: Predominantly Gym and Fitness"
+                },
+                {
+                    "key": "personal_other",
+                    "label": "Personal: Other"
+                },
+                {
+                    "key": "personal_hobby",
+                    "value": "Personal: Hobby"
+                },
+                {
+                    "key": "peronal_racing",
+                    "value": "Personal: Racing"
+                },
+                {
+                    "key": "business_general_remote_sensing",
+                    "value": "Business: General Remote Sensing"
+                },
+                {
+                    "key": "business_agriculture_farming",
+                    "value": "Business: Agriculture or Farming"
+                },
+                {
+                    "key": "business_wildlife_monitoring",
+                    "value": "Business: Wildlife monitoring"
+                },
+                {
+                    "key": "business_commercial_aerial_surveillance_and_security",
+                    "value": "Business: Commerical Aerial Surveillance and Security"
+                },
+                {
+                    "key": "business_professional_photography_and_videography",
+                    "value": "Business: Professional Photography and Videography"
+                },
+                {
+                    "key": "business_oil_gas_and_mineral_exploration",
+                    "value": "Business: Oil, Gas and Mineral Exploration"
+                },
+                {
+                    "key": "business_real_estate_and_construction",
+                    "value": "Business: Real Estate and Construction"
+                },
+                {
+                    "key": "business_disaster_management",
+                    "value": "Business: Disaster Management"
+                },
+                {
+                    "key": "business_search_rescue_and_healthcare",
+                    "value": "Business: Search, Rescue and Healthcare"
+                },
+                {
+                    "key": "business_geographic_mapping",
+                    "value": "Business: Geographic Mapping"
+                },
+                {
+                    "key": "business_storm_tracking_forecasting",
+                    "value": "Business: Storm Tracking and Forecasting"
+                },
+                {
+                    "key": "business_deliveries",
+                    "value": "Business: Deliveries"
+                },
+                {
+                    "key": "business_other",
+                    "value": "Business: Other"
+                }
+            ],
+            "storage": [
+                {
+                    "key": "not_applicable",
+                    "label": "Not applicable"
+                },
+                {
+                    "key": "locked_safe",
+                    "label": "Locked safe"
+                },
+                {
+                    "key": "inside_house",
+                    "label": "Inside house"
+                },
+                {
+                    "key": "with_policyholder",
+                    "label": "With policyholder"
+                },
+                {
+                    "key": "at_workplace",
+                    "label": "At workplace"
+                },
+                {
+                    "key": "inside_car",
+                    "label": "Inside car"
+                }
+            ],
+            "benefits": [
+                {
+                    "key": "standard",
+                    "label": "Standard"
+                },
+                {
+                    "key": "executive",
+                    "label": "Executive"
+                }
+            ],
+            "equipment": [
+                {
+                    "key": "camera_bag",
+                    "label": "Camera bag"
+                },
+                {
+                    "key": "tripod",
+                    "label": "Tripod"
+                },
+                {
+                    "key": "memory_card",
+                    "label": "Memory card"
+                },
+                {
+                    "key": "hard_drive",
+                    "label": "Hard-drive"
+                },
+                {
+                    "key": "remote_control",
+                    "label": "Remote control"
+                },
+                {
+                    "key": "reflectors",
+                    "label": "Reflectors"
+                },
+                {
+                    "key": "lighting_equipment",
+                    "label": "Lighting equipment"
+                }
+            ],
+            "product_usage": {
+                "camera": [
+                    "business",
+                    "personal",
+                    "business_and_personal"
+                ],
+                "camera_lens": [
+                    "business",
+                    "personal",
+                    "business_and_personal"
+                ]
+            },
+            "product_storage": {
+                "camera": [
+                    "not_applicable",
+                    "locked_safe",
+                    "inside_house",
+                    "inside_car",
+                    "at_workplace"
+                ],
+                "camera_lens": [
+                    "not_applicable",
+                    "locked_safe",
+                    "inside_house",
+                    "inside_car",
+                    "at_workplace"
+                ]
+            },
+            "product_benefits": {
+                "camera": [
+                    "standard",
+                    "executive"
+                ],
+                "camera_lens": [
+                    "standard",
+                    "executive"
+                ]
+            },
+            "product_equipment": {
+                "camera": [
+                    {
+                        "key": "camera_bag",
+                        "max_sum_assured": 200000
+                    },
+                    {
+                        "key": "tripod",
+                        "max_sum_assured": 200000
+                    },
+                    {
+                        "key": "memory_card",
+                        "max_sum_assured": 200000
+                    },
+                    {
+                        "key": "hard_drive",
+                        "max_sum_assured": 200000
+                    },
+                    {
+                        "key": "remote_control",
+                        "max_sum_assured": 200000
+                    },
+                    {
+                        "key": "reflectors",
+                        "max_sum_assured": 200000
+                    },
+                    {
+                        "key": "other",
+                        "max_sum_assured": 200000
+                    }
+                ],
+                "camera_lens": [
+                    {
+                        "key": "camera_bag",
+                        "max_sum_assured": 200000
+                    },
+                    {
+                        "key": "tripod",
+                        "max_sum_assured": 200000
+                    },
+                    {
+                        "key": "memory_card",
+                        "max_sum_assured": 200000
+                    },
+                    {
+                        "key": "hard_drive",
+                        "max_sum_assured": 200000
+                    },
+                    {
+                        "key": "remote_control",
+                        "max_sum_assured": 200000
+                    },
+                    {
+                        "key": "reflectors",
+                        "max_sum_assured": 200000
+                    },
+                    {
+                        "key": "other",
+                        "max_sum_assured": 200000
+                    }
+                ]
+            },
+            "excess": {
+                "fixed": [
+                    {
+                        "value": 50000
+                    },
+                    {
+                        "value": 150000
+                    }
+                ],
+                "percentage": [
+                    {
+                        "value": 5,
+                        "min_excess": 100000
+                    },
+                    {
+                        "value": 10,
+                        "min_excess": 100000
+                    }
+                ]
+            }
+        }
+    }
+}
+            
+```
+
+<aside class="warning">
+This request requires the device authentication in the header.
+</aside>
+
+## Get Product Types
+
+Gets the product types information of the root module straight from the root API.
+
+### HTTP Request
+
+`GET https://app.capsured.co.za/api/product_types`
+
+> EXAMPLE REQUEST
+
+```shell
+curl https://app.capsured.co.za/api/product_types \
+  --request GET \
+  -H "Authorization: Basic device_id:access_token"
+```
+
+```json
+{
+    "success": true,
+    "errorCode": 0,
+    "msg": "",
+    "info": "",
+    "data": {
+        "product_types": [
+            {
+                "key": "camera",
+                "label": "Camera"
+            },
+            {
+                "key": "camera_lens",
+                "label": "Camera lens"
+            }
+            
+            // ...
+        ]
+    }
+}            
+```
+
+<aside class="warning">
+This request requires the device authentication in the header.
+</aside>
+
+## Get Filtered Devices
+
+Gets the devices information straight from the root API and filters them according to
+the specified parameters.
+
+### HTTP Request
+
+`POST https://app.capsured.co.za/api/filtered_devices`
+
+> EXAMPLE REQUEST
+
+```shell
+curl https://app.capsured.co.za/api/filtered_devices \
+  --request POST \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Basic device_id:access_token" \
+  -b '{
+      "product_type": "camera",
+      "make": "Canon"
+    }'
+```
+
+#### BODY PARAMETERS
+
+Parameter | Description      
+--------- |  -----------
+product_type |  *string*. The type of the product - `camera_lens` or `camera`.
+make | *string*. The make of the product (selected from the `api/makes` call) - `Canon`, `Nikon`, etc.
+
+> EXAMPLE RESPONSE
+
+```json
+{
+    "success": true,
+    "errorCode": 0,
+    "msg": "",
+    "info": "",
+    "data": {
+        "devices": [
+            {
+                "key": "camera_canon_0",
+                "id": "0",
+                "product_type": "camera",
+                "make": "Canon",
+                "model": "Other",
+                "price": "",
+                "type": ""
+            },
+            {
+                "key": "camera_canon_1",
+                "id": "1",
+                "product_type": "camera",
+                "make": "Canon",
+                "model": "Canon EOS 4000D DSLR Camera (Body Only)",
+                "price": "3 275",
+                "type": "DSLR Cameras"
+            },
+            {
+                "key": "camera_canon_10",
+                "id": "10",
+                "product_type": "camera",
+                "make": "Canon",
+                "model": "Canon EOS M6 Compact Mirrorless Camera (Body Only, Black)",
+                "price": "7 895",
+                "type": "Mirrorless Cameras"
+            }
+            
+            // ...
+        ]
+    }
+}        
+```
+
+<aside class="warning">
+This request requires the device authentication in the header.
+</aside>
+
+# General
+
+## Get About
+
+Get the about information.
+
+### HTTP Request
+
+`GET https://app.capsured.co.za/api/about`
+
+> EXAMPLE REQUEST
+
+```shell
+curl https://app.capsured.co.za/api/about \
+  --request GET
+```
+
+> EXAMPLE RESPONSE
+
+```json
+    {
+        "success": true,
+        "errorCode": 0,
+        "msg": "",
+        "info": "",
+        "data": {
+            "about": "Never gonna give you up ... "
+        }
+    }
+```
+
+## Get Terms and Conditions
+
+Get the terms and conditions information.
+
+### HTTP Request
+
+`GET https://app.capsured.co.za/api/terms`
+
+> EXAMPLE REQUEST
+
+```shell
+curl https://app.capsured.co.za/api/terms \
+  --request GET
+```
+
+> EXAMPLE RESPONSE
+
+```json
+    {
+        "success": true,
+        "errorCode": 0,
+        "msg": "",
+        "info": "",
+        "data": {
+            "terms": "Never gonna let you down ... "
+        }
+    }
+```

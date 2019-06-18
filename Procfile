@@ -1,1 +1,1 @@
-web: bundle exec middleman server -p 
+web: bundle exec middleman server -p 4567

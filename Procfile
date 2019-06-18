@@ -1,1 +1,1 @@
-web: bundle exec middleman server -p 4567
+web: bundle exec middleman server -p $PORT

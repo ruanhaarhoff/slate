@@ -242,13 +242,13 @@ curl https://app.capsured.co.za/api/user \
         },
         "cards": [
             {
-                "bin": "403822",
+                "bin": "403844",
                 "holder": "Ruan Haarhoff",
                 "brand": "VISA",
                 "expiry_month": "08",
                 "expiry_year": "2019",
-                "last_4_digits": "0011",
-                "id": "2393ac6a-aa2e-4e1a-b240-ff62403b02d8"
+                "last_4_digits": "0022",
+                "id": "2453ac6a-aa2e-4e1a-c340-ff62403b0448"
             }
         ]
     }

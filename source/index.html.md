@@ -129,7 +129,7 @@ Register a new user and their Device.
 
 ### HTTP Request
 
-`POST https://app.capsured.co.za/api/register`
+`POST https://app.capsured.co.za/api/user/register`
 
 > EXAMPLE REQUEST
 

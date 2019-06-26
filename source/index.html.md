@@ -194,8 +194,14 @@ version   |  *string*. Version of the device
             "area_code": "7530",
             "age": 24
         },
-        "device_id": "05B805D4-1454-4AE3-9F94-C290AB708137",
-        "access_token": "cb816b0a-b8c3-4919-bc6a-f3f33cf7c2c9"
+        "device": {
+            "id": 1
+            "device_id": "05B805D4-1454-4AE3-9F94-C290AB708137",
+            "type": "ios",
+            "user_id": 1,
+            "access_token": "3f62e1e7-d248-405f-bdeb-b223725aa54f"
+        },
+        "access_token": "3f62e1e7-d248-405f-bdeb-b223725aa54f"
     }
 }
 ```

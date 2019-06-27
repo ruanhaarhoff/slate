@@ -429,7 +429,8 @@ a new item (with other items already on the policy), the get has to take all of 
 response will look a bit different when the user has no policy (meaning he has not activate any items yet). If a user
 has no policy, the response will contain a `quote_package_id`, which will be used when activating the first item.
 
-### On Demand Quote - No Policy (No items activated yet)
+## On Demand Quote - No Policy
+No items activated yet
 
 ### HTTP Request
 
@@ -549,7 +550,8 @@ I am not going to duplicate the ROOT documentation. Visit their docs to see what
 This request requires the device authentication in the header.
 </aside>
 
-### On Demand Quote - Has a Policy (user has previously activated an item)
+## On Demand Quote - Has a Policy
+User has previously activated an item
 
 ### HTTP Request
 
@@ -664,7 +666,8 @@ I am not going to duplicate the ROOT documentation. Visit their docs to see what
 This request requires the device authentication in the header.
 </aside>
 
-### Monthly Quote - Has a Policy (user has previously activated an item)
+## Monthly Quote - Has a Policy
+user has previously activated an item
 
 ### HTTP Request
 
@@ -783,7 +786,9 @@ to be specified with the information given in the request body of the get quote 
 The `card_id` can be specified on the request. This will only be added on requests following the first activation, since the card
 will only be linked to the user after the first item has been activated.
 
-### HTTP Request - First Item for the User
+## Activate an Item - First Item for the User
+
+### HTTP Request
 
 `POST https://app.capsured.co.za/api/item/activate`
 
@@ -926,7 +931,9 @@ display_2 |  *file*. An image of the item
 This request requires the device authentication in the header.
 </aside>
 
-### HTTP Request - Second or more Item for the User
+## Activate an Item - Second or more Item for the User
+
+### HTTP Request
 
 `POST https://app.capsured.co.za/api/item/activate`
 
@@ -988,7 +995,7 @@ Parameter | Description
 --------- |  -----------
 id |  *integer*. The item's id.
 cover_type      |  *string*. The cover type of the quote - `on_demand` or `monthly`.
-quote_request <sub>optional</sub>   |  *json*. The quote that was given as a response from the `/api/quote` request.
+quote_request  |  *json*. The quote that was given as a response from the `/api/quote` request.
 card_id <sub>optional</sub>   |  *string*. The card id of the user. This is only needed if a card is already active for the user.
 serial_0 |  *file*. The serial number image of the item.
 display_0 |  *file*. An image of the item

@@ -434,7 +434,6 @@ has no policy, the response will contain a `quote_package_id`, which will be use
 ### HTTP Request
 
 `POST https://app.capsured.co.za/api/quote`
-
 > EXAMPLE REQUEST
 
 ```shell
@@ -482,7 +481,6 @@ curl https://app.capsured.co.za/api/quote \
 #### BODY PARAMETERS
 
 I am not going to duplicate the ROOT documentation. Visit their docs to see what everything is and how it works.
-
 > EXAMPLE RESPONSE
 
 ```json
@@ -556,7 +554,6 @@ This request requires the device authentication in the header.
 ### HTTP Request
 
 `POST https://app.capsured.co.za/api/quote`
-
 > EXAMPLE REQUEST
 
 ```shell
@@ -604,7 +601,6 @@ curl https://app.capsured.co.za/api/quote \
 #### BODY PARAMETERS
 
 I am not going to duplicate the ROOT documentation. Visit their docs to see what everything is and how it works.
-
 > EXAMPLE RESPONSE
 
 ```json
@@ -673,7 +669,6 @@ This request requires the device authentication in the header.
 ### HTTP Request
 
 `POST https://app.capsured.co.za/api/quote`
-
 > EXAMPLE REQUEST
 
 ```shell
@@ -717,7 +712,6 @@ curl https://app.capsured.co.za/api/quote \
 #### BODY PARAMETERS
 
 I am not going to duplicate the ROOT documentation. Visit their docs to see what everything is and how it works.
-
 > EXAMPLE RESPONSE
 
 ```json

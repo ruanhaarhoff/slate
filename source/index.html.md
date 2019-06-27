@@ -425,10 +425,11 @@ of quotes which can be specified using the `cover_type` key. They are `on_demand
 
 The Quotes get a bit complicated when a user is starting to get quotes for multiple items. This is 
 because all items are loaded onto the same `Insurance Policy`. This means that when a user gets a quote for
-a new item (with other items already on the policy), the get has to take all of this into account. The request response
-will, however, look something like below.
+a new item (with other items already on the policy), the get has to take all of this into account. Thus, the quote
+response will look a bit different when the user has no policy (meaning he has not activate any items yet). If a user
+has no policy, the response will contain a `quote_package_id`, which will be used when activating the first item.
 
-### On Demand Quote  
+### On Demand Quote - No Policy (No items activated yet)
 
 ### HTTP Request
 
@@ -449,7 +450,129 @@ curl https://app.capsured.co.za/api/quote \
       "model": "camera_nikon_9",
       "serial_number": "1234567890",
       "purchase_date": "2018-01-01",
-      "retail_value": 100000,
+      "retail_value": 260000,
+      "benefit_type": "standard",
+      "underwater_usage": true,
+      "perils": {
+          "accidental_damage": true,
+          "theft": true
+      },
+      "excess": {
+          "type": "fixed",
+          "value": 50000
+      },
+      "usage": "personal",
+      "outside_home": true,
+      "overnight_storage": "locked_safe",
+      "daytime_storage": "locked_safe",
+      "protective_gear": null,
+      "extreme_sports": null,
+      "existing_damage": false,
+      "cover_periods": [
+        {
+          "start_date": "2019-07-01",
+          "end_date": "2019-07-20"
+        }
+      ]
+    }
+  ]
+}'
+```
+
+#### BODY PARAMETERS
+
+I am not going to duplicate the ROOT documentation. Visit their docs to see what everything is and how it works.
+
+> EXAMPLE RESPONSE
+
+```json
+{
+    "success": true,
+    "errorCode": 0,
+    "msg": "",
+    "info": "",
+    "data": {
+        "quote": [
+            {
+                "quote_package_id": "cb0b50e1-128f-4146-8804-17d1bcafa6cb",
+                "package_name": "Device Cover",
+                "sum_assured": 260000,
+                "base_premium": 0,
+                "suggested_premium": 0,
+                "module": {
+                    "type": "capsured",
+                    "covered_items": [
+                        {
+                            "cover_type": "on_demand",
+                            "monthly_premium": 0,
+                            "cover_periods": [
+                                {
+                                    "start_date": "2019-07-05",
+                                    "end_date": "2019-07-20",
+                                    "premium": 994
+                                }
+                            ],
+                            "product_type": "camera",
+                            "model": "camera_nikon_9",
+                            "serial_number": "1234567890",
+                            "purchase_date": "2019-06-27",
+                            "retail_value": 260000,
+                            "benefit_type": "standard",
+                            "underwater_usage": true,
+                            "perils": {
+                                "accidental_damage": true,
+                                "theft": true
+                            },
+                            "excess": {
+                                "type": "fixed",
+                                "value": 50000
+                            },
+                            "usage": "personal",
+                            "outside_home": true,
+                            "overnight_storage": "locked_safe",
+                            "daytime_storage": "locked_safe",
+                            "protective_gear": null,
+                            "extreme_sports": null,
+                            "existing_damage": false,
+                            "sum_assured": 260000,
+                            "model_pretty_name": "Nikon D850 DSLR Camera (Body Only)"
+                        }
+                    ],
+                    "policyholder_age": 24
+                },
+                "created_at": "2019-06-27T12:24:51.209Z",
+                "currency": "ZAR"
+            }
+        ]
+    }
+}
+```
+<aside class="warning">
+This request requires the device authentication in the header.
+</aside>
+
+### On Demand Quote - Has a Policy (user has previously activated an item)
+
+### HTTP Request
+
+`POST https://app.capsured.co.za/api/quote`
+
+> EXAMPLE REQUEST
+
+```shell
+curl https://app.capsured.co.za/api/quote \
+  --request POST \
+  -H "Content-Type: multipart/form-data" \
+  -H "Authorization: Basic device_id:access_token" \
+  -b '{
+  "covered_items": [
+    {
+      "product_type": "camera",
+      "cover_type": "on_demand",
+      "model": "camera_nikon_9",
+      "serial_number": "1234567890",
+      "purchase_date": "2018-01-01",
+      "retail_value": 260000,
       "benefit_type": "standard",
       "underwater_usage": true,
       "perils": {
@@ -666,7 +789,64 @@ to be specified with the information returned from the `api/quote` request.
 The `card_id` can be specified on the request. This will only be added on requests following the first activation, since the card
 will only be linked to the user after the first item has been activated.
 
-### HTTP Request
+### HTTP Request - First Item for the User
+
+`POST https://app.capsured.co.za/api/item/activate`
+
+> EXAMPLE REQUEST
+
+```shell
+curl https://app.capsured.co.za/api/item/activate \
+  --request POST \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Basic device_id:access_token" \
+  -F 'display_0=@/path/to/file/example_file_1.jpg' \
+  -F 'display_1=@/path/to/file/example_file_2.jpg' \
+  -F 'display_2=@/path/to/file/example_file_3.jpg' \
+  -F 'serial_0=@/path/to/file/example_file_4.jpg' \
+  -b '{
+    "id": 1,
+    "cover_type": "on_demand",
+    "quote_package_id": "cb0b50e1-128f-4146-8804-17d1bcafa6cb",
+    "quote_request": {
+        "covered_items": [
+            {
+                "product_type": "camera",
+                "cover_type": "on_demand",
+                "model": "camera_nikon_9",
+                "serial_number": "1234567890",
+                "purchase_date": "2018-01-01",
+                "retail_value": 100000,
+                "benefit_type": "standard",
+                "underwater_usage": true,
+                "perils": {
+                    "accidental_damage": true,
+                    "theft": true
+                },
+                "excess": {
+                    "type": "fixed",
+                    "value": 50000
+                },
+                "usage": "personal",
+                "outside_home": true,
+                "overnight_storage": "locked_safe",
+                "daytime_storage": "locked_safe",
+                "protective_gear": null,
+                "extreme_sports": null,
+                "existing_damage": false,
+                "cover_periods": [
+                  {
+                    "start_date": "2019-04-05",
+                    "end_date": "2019-04-20"
+                  }
+                ]
+            }
+        ]	
+    }
+   }'
+```
+
+### HTTP Request - Second or more Item for the User
 
 `POST https://app.capsured.co.za/api/item/activate`
 

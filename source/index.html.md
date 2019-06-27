@@ -668,7 +668,7 @@ I am not going to duplicate the ROOT documentation. Visit their docs to see what
 This request requires the device authentication in the header.
 </aside>
 
-### Monthly Quote  
+### Monthly Quote - Has a Policy (user has previously activated an item)
 
 ### HTTP Request
 
@@ -784,7 +784,7 @@ the user with the quote he/she has chosen. This endpoint works in two ways:
 1. When the user has no items activated, the user has no existing policy. The quote that the user got will contain a `package_id`. Thus, the `quote_package_id` will need
 to be specified in the body of this request.
 2. When the user has items activated and a policy already exists, the `quote_request` in the body needs
-to be specified with the information returned from the `api/quote` request. 
+to be specified with the information given in the request body of the get quote request. 
 
 The `card_id` can be specified on the request. This will only be added on requests following the first activation, since the card
 will only be linked to the user after the first item has been activated.
@@ -807,44 +807,130 @@ curl https://app.capsured.co.za/api/item/activate \
   -b '{
     "id": 1,
     "cover_type": "on_demand",
-    "quote_package_id": "cb0b50e1-128f-4146-8804-17d1bcafa6cb",
-    "quote_request": {
-        "covered_items": [
-            {
-                "product_type": "camera",
-                "cover_type": "on_demand",
-                "model": "camera_nikon_9",
-                "serial_number": "1234567890",
-                "purchase_date": "2018-01-01",
-                "retail_value": 100000,
-                "benefit_type": "standard",
-                "underwater_usage": true,
-                "perils": {
-                    "accidental_damage": true,
-                    "theft": true
-                },
-                "excess": {
-                    "type": "fixed",
-                    "value": 50000
-                },
-                "usage": "personal",
-                "outside_home": true,
-                "overnight_storage": "locked_safe",
-                "daytime_storage": "locked_safe",
-                "protective_gear": null,
-                "extreme_sports": null,
-                "existing_damage": false,
-                "cover_periods": [
-                  {
-                    "start_date": "2019-04-05",
-                    "end_date": "2019-04-20"
-                  }
-                ]
-            }
-        ]	
-    }
+    "quote_package_id": "cb0b50e1-128f-4146-8804-17d1bcafa6cb"
    }'
 ```
+
+#### BODY PARAMETERS
+
+Parameter | Description      
+--------- |  -----------
+id |  *integer*. The item's id.
+cover_type      |  *string*. The cover type of the quote - `on_demand` or `monthly`.
+quote_package_id   |  *string*. The quote package id that was returned in the get quote request.
+card_id <sub>optional</sub>   |  *string*. The card id of the user. This is only needed if a card is already active for the user.
+serial_0 |  *file*. The serial number image of the item.
+display_0 |  *file*. An image of the item
+display_1 |  *file*. An image of the item
+display_2 |  *file*. An image of the item
+> EXAMPLE RESPONSE
+
+```json
+ {
+     "success": true,
+     "errorCode": 0,
+     "msg": "",
+     "info": "",
+     "data": {
+         "item": {
+             "id": 1,
+             "name": "My Canon",
+             "key": "canon_4000d",
+             "product_type": "camera",
+             "make": "Canon",
+             "model": "4000D",
+             "serial_number": "1234567890",
+             "covered_item_id": "5af46622-d42d-4a45-a231-cfc9e640a4e0",
+             "reason_cancelled": null,
+             "status": 1,
+             "cover_type": 1,
+             "created_at": "2019-06-27 12:24:39",
+             "updated_at": "2019-06-27 12:35:31",
+             "deleted_at": null,
+             "payment_successful": 0,
+             "purchase_date": "2018-12-03 00:00:00",
+             "policy": {
+                 "scheme_type": "individual",
+                 "created_at": "2019-06-27T12:35:29.254Z",
+                 "package_name": "Device Cover",
+                 "sum_assured": 260000,
+                 "base_premium": 0,
+                 "monthly_premium": 0,
+                 "billing_amount": 0,
+                 "billing_frequency": "monthly",
+                 "billing_day": 1,
+                 "start_date": "2019-06-27T12:35:29.000Z",
+                 "end_date": "2020-06-27T12:35:29.000Z",
+                 "cancelled_at": null,
+                 "reason_cancelled": null,
+                 "app_data": null,
+                 "module": {
+                     "type": "capsured"
+                 },
+                 "claim_ids": [],
+                 "complaint_ids": [],
+                 "status": "pending_initial_payment",
+                 "balance": 0,
+                 "currency": "ZAR"
+             },
+             "covered_items": [
+                 {
+                     "covered_item_id": "5af46622-d42d-4a45-a231-cfc9e640a4e0",
+                     "created_at": "2019-06-27T12:35:29.255Z",
+                     "cover_type": "on_demand",
+                     "monthly_premium": 0,
+                     "module": {
+                         "model": "camera_nikon_9",
+                         "usage": "personal",
+                         "excess": {
+                             "type": "fixed",
+                             "value": 50000
+                         },
+                         "perils": {
+                             "theft": true,
+                             "accidental_damage": true
+                         },
+                         "sum_assured": 260000,
+                         "benefit_type": "standard",
+                         "outside_home": true,
+                         "product_type": "camera",
+                         "retail_value": 260000,
+                         "purchase_date": "2019-06-27",
+                         "serial_number": "1234567890",
+                         "extreme_sports": null,
+                         "daytime_storage": "locked_safe",
+                         "existing_damage": false,
+                         "protective_gear": null,
+                         "underwater_usage": true,
+                         "model_pretty_name": "Nikon D850 DSLR Camera (Body Only)",
+                         "overnight_storage": "locked_safe"
+                     },
+                     "cover_periods": [
+                         {
+                             "cover_period_id": "b4d9d8de-d7db-46a8-b248-95029b31769c",
+                             "start_date": "2019-07-01",
+                             "end_date": "2019-07-20",
+                             "premium": 994,
+                             "payment_status": "not_paid"
+                         }
+                     ]
+                 }
+             ],
+             "files": [
+                 {
+                     "id": 30,
+                     "path": "default/default_profile.png",
+                     "file_name": "default_profile.png",
+                     "type": "profile"
+                 }
+             ]
+         }
+     }
+ }
+```
+<aside class="warning">
+This request requires the device authentication in the header.
+</aside>
 
 ### HTTP Request - Second or more Item for the User
 
@@ -909,7 +995,6 @@ Parameter | Description
 id |  *integer*. The item's id.
 cover_type      |  *string*. The cover type of the quote - `on_demand` or `monthly`.
 quote_request <sub>optional</sub>   |  *json*. The quote that was given as a response from the `/api/quote` request.
-quote_package_id <sub>optional</sub>   |  *string*. The quote package id that was selected for the firt activated item.
 card_id <sub>optional</sub>   |  *string*. The card id of the user. This is only needed if a card is already active for the user.
 serial_0 |  *file*. The serial number image of the item.
 display_0 |  *file*. An image of the item
@@ -917,8 +1002,109 @@ display_1 |  *file*. An image of the item
 display_2 |  *file*. An image of the item
 > EXAMPLE RESPONSE
 
-```
- // TODO
+```json
+ {
+     "success": true,
+     "errorCode": 0,
+     "msg": "",
+     "info": "",
+     "data": {
+         "item": {
+             "id": 14,
+             "name": "Test Quote 1",
+             "key": "canon_4000d",
+             "product_type": "camera",
+             "make": "Canon",
+             "model": "4000D",
+             "serial_number": "1234567890",
+             "covered_item_id": "760c32b4-6a28-482f-b912-30a6088e9337",
+             "reason_cancelled": null,
+             "status": 1,
+             "cover_type": 1,
+             "created_at": "2019-06-27 12:58:16",
+             "updated_at": "2019-06-27 13:00:02",
+             "deleted_at": null,
+             "payment_successful": 0,
+             "purchase_date": "2018-12-03 00:00:00",
+             "policy": {
+                 "scheme_type": "individual",
+                 "created_at": "2019-04-05T09:54:14.233Z",
+                 "package_name": "Device Cover",
+                 "sum_assured": 500000,
+                 "base_premium": 0,
+                 "monthly_premium": 0,
+                 "billing_amount": 0,
+                 "billing_frequency": "monthly",
+                 "billing_day": 1,
+                 "start_date": "2019-04-05T09:54:14.000Z",
+                 "end_date": "2020-04-05T09:54:14.000Z",
+                 "cancelled_at": null,
+                 "reason_cancelled": null,
+                 "app_data": null,
+                 "module": {
+                     "type": "capsured"
+                 },
+                 "policy_welcome_letter_uri": "https://sandbox.root.co.za/v1/insurance/policies/e34e18fa-c080-44df-bab4-f26e930c4726/welcome-letter/welcome_letter.pdf",
+                 "claim_ids": [],
+                 "complaint_ids": [],
+                 "status": "active",
+                 "balance": 0,
+                 "currency": "ZAR"
+             },
+             "covered_items": [
+                 {
+                     "covered_item_id": "760c32b4-6a28-482f-b912-30a6088e9337",
+                     "created_at": "2019-06-27T13:00:00.570Z",
+                     "cover_type": "on_demand",
+                     "monthly_premium": 0,
+                     "module": {
+                         "model": "camera_nikon_9",
+                         "usage": "personal",
+                         "excess": {
+                             "type": "fixed",
+                             "value": 50000
+                         },
+                         "perils": {
+                             "theft": true,
+                             "accidental_damage": true
+                         },
+                         "sum_assured": 300000,
+                         "benefit_type": "standard",
+                         "outside_home": true,
+                         "product_type": "camera",
+                         "retail_value": 300000,
+                         "purchase_date": "2018-01-01",
+                         "serial_number": "1234567890",
+                         "extreme_sports": null,
+                         "daytime_storage": "locked_safe",
+                         "existing_damage": false,
+                         "protective_gear": null,
+                         "underwater_usage": true,
+                         "model_pretty_name": "Nikon D850 DSLR Camera (Body Only)",
+                         "overnight_storage": "locked_safe"
+                     },
+                     "cover_periods": [
+                         {
+                             "cover_period_id": "50620dfc-0efc-43c1-95d2-e73fd5d195d9",
+                             "start_date": "2019-07-12",
+                             "end_date": "2019-07-13",
+                             "premium": 137,
+                             "payment_status": "not_paid"
+                         }
+                     ]
+                 }
+             ],
+             "files": [
+                 {
+                     "id": 30,
+                     "path": "default/default_profile.png",
+                     "file_name": "default_profile.png",
+                     "type": "profile"
+                 }
+             ]
+         }
+     }
+ }
 ```
 <aside class="warning">
 This request requires the device authentication in the header.

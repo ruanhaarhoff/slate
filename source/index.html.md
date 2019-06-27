@@ -389,31 +389,27 @@ profile | *file* The profile picture of the item.
     "msg": "",
     "info": "",
     "data": {
-        "user": {
+        "item": {
             "id": 1,
-            "first_name": "Ruan",
-            "last_name": "Haarhoff",
-            "email": "ruan.haarhoff@gmail.com",
-            "phone": null,
-            "id_number": "9408085029086",
-            "id_country": "ZA",
-            "created_at": "2019-04-11 12:17:31",
-            "updated_at": "2019-04-12 08:15:21",
-            "deleted_at": null,
-            "area_code": "7530",
-            "age": 24
-        },
-        "cards": [
-            {
-                "bin": "403822",
-                "holder": "Ruan Haarhoff",
-                "brand": "VISA",
-                "expiry_month": "08",
-                "expiry_year": "2019",
-                "last_4_digits": "0011",
-                "id": "2393ac6a-aa2e-4e1a-b240-ff62403b02d8"
-            }
-        ]
+            "name": "My Canon",
+            "key": "camera_nikon_9",
+            "product_type": "camera",
+            "make": "Nikon",
+            "model": "4000D",
+            "serial_number": "1234567890",
+            "purchase_date": "2018-12-03",
+            "status": 1,
+            "updated_at": "2019-06-27 11:17:06",
+            "created_at": "2019-06-27 11:17:06",
+            "files": [
+                {
+                    "id": 1,
+                    "path": "local/users/1/items/1/Sk841BcyQ7NhrmZysrX9d3Q89d7Y2xGSmc9bzn1t.png",
+                    "file_name": "test.png",
+                    "type": "profile"
+                }
+            ]
+        }
     }
 }
 ```

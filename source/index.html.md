@@ -440,7 +440,7 @@ No items activated yet
 ```shell
 curl https://app.capsured.co.za/api/quote \
   --request POST \
-  -H "Content-Type: multipart/form-data" \
+  -H "Content-Type: application/json" \
   -H "Authorization: Basic device_id:access_token" \
   -b '{
   "covered_items": [
@@ -561,7 +561,7 @@ User has previously activated an item
 ```shell
 curl https://app.capsured.co.za/api/quote \
   --request POST \
-  -H "Content-Type: multipart/form-data" \
+  -H "Content-Type: application/json" \
   -H "Authorization: Basic device_id:access_token" \
   -b '{
   "covered_items": [
@@ -677,7 +677,7 @@ user has previously activated an item
 ```shell
 curl https://app.capsured.co.za/api/quote \
   --request POST \
-  -H "Content-Type: multipart/form-data" \
+  -H "Content-Type: application/json" \
   -H "Authorization: Basic device_id:access_token" \
   -b '{
     "covered_items": [
